@@ -79,7 +79,13 @@
             this.labelStatScore = new System.Windows.Forms.Label();
             this.cmdCancelScore = new System.Windows.Forms.Button();
             this.cmdSaveScore = new System.Windows.Forms.Button();
-            this.lbLeaderboard = new System.Windows.Forms.ListBox();
+            this.lbLeaderboardNormal = new System.Windows.Forms.ListBox();
+            this.lbLeaderboardGamer = new System.Windows.Forms.ListBox();
+            this.lbLeaderboardCake = new System.Windows.Forms.ListBox();
+            this.labelGamer = new System.Windows.Forms.Label();
+            this.labelNormal = new System.Windows.Forms.Label();
+            this.labelCake = new System.Windows.Forms.Label();
+            this.labelControls = new System.Windows.Forms.Label();
             this.gbControl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picPlayer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picPlayer2)).BeginInit();
@@ -360,7 +366,7 @@
             this.labelVersion.Name = "labelVersion";
             this.labelVersion.Size = new System.Drawing.Size(82, 17);
             this.labelVersion.TabIndex = 6;
-            this.labelVersion.Text = "Version 0.1.0";
+            this.labelVersion.Text = "Version 0.1.5";
             // 
             // cmdExit
             // 
@@ -705,17 +711,91 @@
             this.cmdSaveScore.UseVisualStyleBackColor = false;
             this.cmdSaveScore.Click += new System.EventHandler(this.cmdSaveScore_Click);
             // 
-            // lbLeaderboard
+            // lbLeaderboardNormal
             // 
-            this.lbLeaderboard.BackColor = System.Drawing.Color.Gray;
-            this.lbLeaderboard.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lbLeaderboard.FormattingEnabled = true;
-            this.lbLeaderboard.ItemHeight = 15;
-            this.lbLeaderboard.Location = new System.Drawing.Point(194, 80);
-            this.lbLeaderboard.Name = "lbLeaderboard";
-            this.lbLeaderboard.Size = new System.Drawing.Size(598, 302);
-            this.lbLeaderboard.TabIndex = 0;
-            this.lbLeaderboard.Visible = false;
+            this.lbLeaderboardNormal.BackColor = System.Drawing.Color.Gray;
+            this.lbLeaderboardNormal.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lbLeaderboardNormal.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.lbLeaderboardNormal.FormattingEnabled = true;
+            this.lbLeaderboardNormal.ItemHeight = 15;
+            this.lbLeaderboardNormal.Location = new System.Drawing.Point(206, 172);
+            this.lbLeaderboardNormal.Name = "lbLeaderboardNormal";
+            this.lbLeaderboardNormal.Size = new System.Drawing.Size(433, 180);
+            this.lbLeaderboardNormal.TabIndex = 0;
+            this.lbLeaderboardNormal.Visible = false;
+            // 
+            // lbLeaderboardGamer
+            // 
+            this.lbLeaderboardGamer.BackColor = System.Drawing.Color.Gray;
+            this.lbLeaderboardGamer.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lbLeaderboardGamer.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.lbLeaderboardGamer.FormattingEnabled = true;
+            this.lbLeaderboardGamer.ItemHeight = 15;
+            this.lbLeaderboardGamer.Location = new System.Drawing.Point(206, 1);
+            this.lbLeaderboardGamer.Name = "lbLeaderboardGamer";
+            this.lbLeaderboardGamer.Size = new System.Drawing.Size(434, 165);
+            this.lbLeaderboardGamer.TabIndex = 22;
+            this.lbLeaderboardGamer.Visible = false;
+            // 
+            // lbLeaderboardCake
+            // 
+            this.lbLeaderboardCake.BackColor = System.Drawing.Color.Gray;
+            this.lbLeaderboardCake.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lbLeaderboardCake.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.lbLeaderboardCake.FormattingEnabled = true;
+            this.lbLeaderboardCake.ItemHeight = 15;
+            this.lbLeaderboardCake.Location = new System.Drawing.Point(206, 359);
+            this.lbLeaderboardCake.Name = "lbLeaderboardCake";
+            this.lbLeaderboardCake.Size = new System.Drawing.Size(434, 165);
+            this.lbLeaderboardCake.TabIndex = 23;
+            this.lbLeaderboardCake.Visible = false;
+            // 
+            // labelGamer
+            // 
+            this.labelGamer.AutoSize = true;
+            this.labelGamer.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.labelGamer.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.labelGamer.Location = new System.Drawing.Point(646, 68);
+            this.labelGamer.Name = "labelGamer";
+            this.labelGamer.Size = new System.Drawing.Size(88, 30);
+            this.labelGamer.TabIndex = 26;
+            this.labelGamer.Text = "- Gamer";
+            this.labelGamer.Visible = false;
+            // 
+            // labelNormal
+            // 
+            this.labelNormal.AutoSize = true;
+            this.labelNormal.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.labelNormal.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
+            this.labelNormal.Location = new System.Drawing.Point(645, 246);
+            this.labelNormal.Name = "labelNormal";
+            this.labelNormal.Size = new System.Drawing.Size(96, 30);
+            this.labelNormal.TabIndex = 27;
+            this.labelNormal.Text = "- Normal";
+            this.labelNormal.Visible = false;
+            // 
+            // labelCake
+            // 
+            this.labelCake.AutoSize = true;
+            this.labelCake.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.labelCake.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.labelCake.Location = new System.Drawing.Point(646, 426);
+            this.labelCake.Name = "labelCake";
+            this.labelCake.Size = new System.Drawing.Size(72, 30);
+            this.labelCake.TabIndex = 28;
+            this.labelCake.Text = "- Cake";
+            this.labelCake.Visible = false;
+            // 
+            // labelControls
+            // 
+            this.labelControls.AutoSize = true;
+            this.labelControls.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.labelControls.ForeColor = System.Drawing.Color.White;
+            this.labelControls.Location = new System.Drawing.Point(265, 78);
+            this.labelControls.Name = "labelControls";
+            this.labelControls.Size = new System.Drawing.Size(453, 325);
+            this.labelControls.TabIndex = 26;
+            this.labelControls.Text = resources.GetString("labelControls.Text");
             // 
             // Form1
             // 
@@ -723,7 +803,13 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(816, 525);
-            this.Controls.Add(this.lbLeaderboard);
+            this.Controls.Add(this.labelControls);
+            this.Controls.Add(this.labelCake);
+            this.Controls.Add(this.labelNormal);
+            this.Controls.Add(this.labelGamer);
+            this.Controls.Add(this.lbLeaderboardCake);
+            this.Controls.Add(this.lbLeaderboardGamer);
+            this.Controls.Add(this.lbLeaderboardNormal);
             this.Controls.Add(this.gbStats);
             this.Controls.Add(this.labelSprint);
             this.Controls.Add(this.sprintBar);
@@ -808,6 +894,12 @@
         private TextBox txtName;
         private Label label2;
         private Label labelTxtIndacator;
-        private ListBox lbLeaderboard;
+        private ListBox lbLeaderboardNormal;
+        private ListBox lbLeaderboardGamer;
+        private ListBox lbLeaderboardCake;
+        private Label labelGamer;
+        private Label labelNormal;
+        private Label labelCake;
+        private Label labelControls;
     }
 }

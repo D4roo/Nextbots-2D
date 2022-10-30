@@ -60,6 +60,21 @@
   <metadata name="timerExe.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="labelControls.Text" xml:space="preserve">
+    <value>Controls:
+WASD : Player 1 (Purple)
+IJKL : Player 2 (Green)
+Shift : Sprint
+L-Mouse : Place mine
+
+Points:
+Kill : +1
+Survive 10s : +15
+Survive 60s : + 60
+
+Extra:
+botcount(0) + 2player + nextbots : Mines kill nextbot</value>
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

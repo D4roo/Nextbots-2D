@@ -26,6 +26,7 @@ namespace Nextbots2D
         public int score = 0;
         public int kills = 0;
         public string difficulty = "Normal";
+        public string time = "ToBeSet";
         System.Timers.Timer t = new System.Timers.Timer();// t;
         List<PictureBox> items = new List<PictureBox>();
         List<PictureBox> items2 = new List<PictureBox>();
@@ -37,6 +38,7 @@ namespace Nextbots2D
         Image Pinhead = Image.FromFile(@"..\..\..\Resources\Pinhead.png");
         Image Alternate = Image.FromFile(@"..\..\..\Resources\Alternate.png");
         Image PVZmine = Image.FromFile(@"..\..\..\Resources\PVZ.png");
+        public PictureBox playerCanDie;
 
         public Form1()
         {
@@ -50,6 +52,14 @@ namespace Nextbots2D
             t = new System.Timers.Timer();
             t.Interval = 1;
             t.Elapsed += OnTimeEvent;
+            MongoClient dbClient; //Check if connected to internet
+            try { dbClient = new MongoClient("mongodb+srv://dara:wIfXFsNb9lHg7O9F@shaydacluster.svpy6.mongodb.net/ShaydaCluster?retryWrites=true&w=majority"); } catch
+            {
+                cmdSaveScore.Enabled = false;
+                cmdLeaderboard.Enabled = false;
+                cmdLeaderboard.Text = "No Internet";
+                cmdSaveScore.Text = "No Internet";
+            }
         }
         private void OnTimeEvent(object? sender, ElapsedEventArgs e)
         {
@@ -64,15 +74,18 @@ namespace Nextbots2D
                     {
                         ms = 0;
                         s += 1;
+                        if(s == 10 || s == 20 || s == 30 || s == 40 || s == 50) labelScore.Text = "SCORE: " + (score += 15).ToString();
                         if (SprintLock == true) SprintLock = false;
                     }
                     if (s == 60)
                     {
                         s = 0;
                         m += 1;
+                        labelScore.Text = "SCORE: " + (score += 60).ToString();
                     }
                     if (ms2 == 650) { ms2 = 0; spawnSupply(); }
                     labelTimer.Text = string.Format("{0}:{1}:{2}", m.ToString().PadLeft(2, '0'), s.ToString().PadLeft(2, '0'), ms.ToString().PadLeft(2, '0'));
+                    time = string.Format("{0}:{1}", m.ToString().PadLeft(2, '0'), s.ToString().PadLeft(2, '0'));
                     if (cbCustomBotCount.Checked) //Spawn Custom Bots
                     {
                         if (botCount.ToString() == txtCustomBots.Text) return;
@@ -99,8 +112,10 @@ namespace Nextbots2D
         private void cmdPlay_Click(object sender, EventArgs e)
         {
             Random random = new Random();
+            playerCanDie = new PictureBox();
             if (txtPlayerSpeed.BackColor == Color.FromArgb(255, 128, 128)) return;
             if (txtBotSpeed.BackColor == Color.FromArgb(255, 128, 128)) return;
+            labelControls.Visible = false;
             foreach (PictureBox bot in items.ToList()) { items.Remove(bot); this.Controls.Remove(bot); }
             foreach (PictureBox bot in items2.ToList()) { items2.Remove(bot); this.Controls.Remove(bot); }
             foreach (PictureBox bot in itemsTotal.ToList()) { itemsTotal.Remove(bot); this.Controls.Remove(bot); }
@@ -109,6 +124,8 @@ namespace Nextbots2D
             m = 0; s = 0; ms = 0; ms2 = 0; spawnIntervalMs = 0; botCount = 0; mines = 20;
             picPlayer.Location = new Point(this.Size.Width / 2, this.Size.Height / 2);
             if (picPlayer2.Visible == true) { picPlayer.Location = new Point(this.Size.Width / 2 - 200, this.Size.Height / 2); picPlayer2.Location = new Point(this.Size.Width / 2 + 200, this.Size.Height / 2); }
+            picPlayer.Image = null; picPlayer2.Image = null;
+            picPlayer.BackColor = Color.FromArgb(192, 192, 255); picPlayer2.BackColor = Color.FromArgb(128, 255, 128);
             if (cbNextbots.Checked == true && picPlayer2.Visible == true && txtCustomBots.Text == "0")
             {
                 int rand = random.Next(0, 4);
@@ -121,6 +138,7 @@ namespace Nextbots2D
                     if (rand == 1) picPlayer.Image = Obunga;
                     if (rand == 2) picPlayer.Image = Pinhead;
                     if (rand == 3) picPlayer.Image = Alternate;
+                    playerCanDie = picPlayer;
                 }
                 else
                 {
@@ -130,6 +148,7 @@ namespace Nextbots2D
                     if (rand == 1) picPlayer2.Image = Obunga;
                     if (rand == 2) picPlayer2.Image = Pinhead;
                     if (rand == 3) picPlayer2.Image = Alternate;
+                    playerCanDie = picPlayer2;
                 }
             }
             speed = int.Parse(txtPlayerSpeed.Text);
@@ -152,8 +171,13 @@ namespace Nextbots2D
             sprintSpeed = speed + 5;
             originalSpeed = speed;
             txtName.Text = "";
-            cmdSaveScore.Enabled = true; cmdSaveScore.Text = "Save To Leaderboard"; cmdSaveScore.BackColor = Color.FromArgb(192, 255, 192);
+            cmdSaveScore.BackColor = Color.FromArgb(192, 255, 192);
             if (cbPlayerSpeed.Checked || cbBotSpeed.Checked || cbCustomBotCount.Checked) { cmdSaveScore.Enabled = false; cmdSaveScore.Text = "Cannot Save Custom Game"; cmdSaveScore.BackColor = Color.FromArgb(255, 128, 128); }
+            lbLeaderboardNormal.Visible = false;
+            lbLeaderboardCake.Visible = false;
+            lbLeaderboardGamer.Visible = false;
+            labelGamer.Visible = false; labelNormal.Visible = false; labelCake.Visible = false;
+            time = "ToBeSet";
             timerExe.Enabled = true; //Starts Game Movements
             t.Start(); //Starts Game Timer + Events
         }
@@ -243,6 +267,12 @@ namespace Nextbots2D
                 labelPos1.ForeColor = Color.FromArgb(128, 128, 255);
                 labelPos2.ForeColor = Color.FromArgb(128, 255, 128);
                 labelSprint.ForeColor = Color.Black;
+                labelStatScore.ForeColor = Color.Black;
+                labelStatsKills.ForeColor = Color.Red;
+                labelStatsTime.ForeColor = Color.Black;
+                label1.ForeColor = Color.Black;
+                label2.ForeColor = Color.Black;
+                labelControls.ForeColor = Color.Black;
                 cbNextbots.ForeColor = Color.Black;
                 cbCubes.ForeColor = Color.Black;
                 cbCustomBotCount.ForeColor = Color.Black;
@@ -268,6 +298,12 @@ namespace Nextbots2D
                 labelPos1.ForeColor = Color.FromArgb(192, 192, 255);
                 labelPos2.ForeColor = Color.FromArgb(192, 255, 192);
                 labelSprint.ForeColor = Color.White;
+                labelStatScore.ForeColor = Color.White;
+                labelStatsKills.ForeColor = Color.FromArgb(255, 128, 128);
+                labelStatsTime.ForeColor = Color.White;
+                label1.ForeColor = Color.White;
+                label2.ForeColor = Color.White;
+                labelControls.ForeColor = Color.White;
                 cbNextbots.ForeColor = Color.White;
                 cbCubes.ForeColor = Color.White;
                 cbCustomBotCount.ForeColor = Color.White;
@@ -314,34 +350,81 @@ namespace Nextbots2D
             { "Name", txtName.Text },
             { "Score", score },
             { "Kills", kills },
-            { "Time", labelTimer.Text },
+            { "Time", time },
             { "Difficulty", difficulty },
             };
             collection.InsertOne(document);
             gbStats.Visible = false;
             gbControl.Visible = true;
+            cmdSaveScore.Text = "Save To Leaderboard";
+            cmdSaveScore.Enabled = true;
         }
         private void cmdLeaderboard_Click(object sender, EventArgs e)
         {
             //View Leaderboard
-            lbLeaderboard.Items.Clear();
-            if (lbLeaderboard.Visible == false) { lbLeaderboard.Visible = true; } else { lbLeaderboard.Visible = false; return; }
+            labelControls.Visible = false;
+            lbLeaderboardNormal.Items.Clear();
+            lbLeaderboardGamer.Items.Clear();
+            lbLeaderboardCake.Items.Clear();
+            if (lbLeaderboardNormal.Visible == false)
+            { 
+                lbLeaderboardNormal.Visible = true;
+                lbLeaderboardGamer.Visible = true;
+                lbLeaderboardCake.Visible = true;
+                labelGamer.Visible = true; labelNormal.Visible = true; labelCake.Visible = true;
+            } else
+            {
+                lbLeaderboardNormal.Visible = false;
+                lbLeaderboardGamer.Visible = false;
+                lbLeaderboardCake.Visible = false;
+                labelGamer.Visible = false; labelNormal.Visible = false; labelCake.Visible = false;
+                return; 
+            }
             MongoClient dbClient = new MongoClient("mongodb+srv://dara:wIfXFsNb9lHg7O9F@shaydacluster.svpy6.mongodb.net/ShaydaCluster?retryWrites=true&w=majority");
+            //var sortDocumentsGamer = collection.Find(new BsonDocument()).Sort(Builders<BsonDocument>.Sort.Descending("Score")).ToList(); for all docs
 
             var database = dbClient.GetDatabase("Nextbots2DCluster");
             var collection = database.GetCollection<BsonDocument>("Leaderboard");
-            var documents = collection.Find(new BsonDocument()).ToList();
+            var filterGamer = collection.Find(new BsonDocument { { "Difficulty", "Gamer" } });
+            var filterNormal = collection.Find(new BsonDocument { { "Difficulty", "Normal" } });
+            var filterCake = collection.Find(new BsonDocument { { "Difficulty", "Cake" } });
+            var sortDocumentsGamer = filterGamer.Sort(Builders<BsonDocument>.Sort.Descending("Score")).ToList();
+            var sortDocumentsNormal = filterNormal.Sort(Builders<BsonDocument>.Sort.Descending("Score")).ToList();
+            var sortDocumentsCake = filterCake.Sort(Builders<BsonDocument>.Sort.Descending("Score")).ToList();
+            int placeNormal = 0;
+            int placeGamer = 0;
+            int placeCake = 0;
 
-            foreach (BsonDocument doc in documents)
+            foreach (BsonDocument doc in sortDocumentsNormal)
             {
+                placeNormal += 1;
                 var dName = doc.GetValue("Name");
                 var dScore = doc.GetValue("Score");
-                var dKills = doc.GetValue("Score");
+                var dKills = doc.GetValue("Kills");
                 var dTime = doc.GetValue("Time");
                 var dDifficulty = doc.GetValue("Difficulty");
-                lbLeaderboard.Items.Add(dName + " - " + dScore + " - " + dKills + " - " + dTime + " - " + dDifficulty);
+                lbLeaderboardNormal.Items.Add(placeNormal + ". " + dName + " ///// Score: " + dScore + " ///// Kills: " + dKills + " ///// Time: " + dTime + "s ///// " + dDifficulty);
             }
-
+            foreach (BsonDocument doc in sortDocumentsGamer)
+            {
+                placeGamer += 1;
+                var dName = doc.GetValue("Name");
+                var dScore = doc.GetValue("Score");
+                var dKills = doc.GetValue("Kills");
+                var dTime = doc.GetValue("Time");
+                var dDifficulty = doc.GetValue("Difficulty");
+                lbLeaderboardGamer.Items.Add(placeGamer + ". " + dName + " ///// Score: " + dScore + " ///// Kills: " + dKills + " ///// Time: " + dTime + "s ///// " + dDifficulty);
+            }
+            foreach (BsonDocument doc in sortDocumentsCake)
+            {
+                placeCake += 1;
+                var dName = doc.GetValue("Name");
+                var dScore = doc.GetValue("Score");
+                var dKills = doc.GetValue("Kills");
+                var dTime = doc.GetValue("Time");
+                var dDifficulty = doc.GetValue("Difficulty");
+                lbLeaderboardCake.Items.Add(placeCake + ". " + dName + " ///// Score: " + dScore + " ///// Kills: " + dKills + " ///// Time: " + dTime + "s ///// " + dDifficulty);
+            }
         }
         private void txtPlayerSpeed_TextChanged(object sender, EventArgs e)
         {
@@ -507,13 +590,30 @@ namespace Nextbots2D
                 labelMines2.Visible = false;
                 labelBots.Visible = false;
                 labelKills.Visible = false;
-                picPlayer.BackColor = Color.FromArgb(192, 192, 255);
                 picPlayer.SizeMode = PictureBoxSizeMode.StretchImage;
-                picPlayer.Image = null;
-                picPlayer2.BackColor = Color.FromArgb(128, 255, 128);
                 picPlayer2.SizeMode = PictureBoxSizeMode.StretchImage;
-                picPlayer2.Image = null;
                 sprintBar.Value = 0;
+            }
+            if (txtCustomBots.Text == "0" && picPlayer2.Visible == true && cbNextbots.Checked) //1v1 Player Hits Mine
+            {
+                foreach(PictureBox mine in itemsMine.ToList())
+                {
+                    if (playerCanDie.Bounds.IntersectsWith(mine.Bounds))
+                    {
+                        timerExe.Enabled = false;
+                        t.Stop();
+                        gbControl.Visible = true;
+                        labelPos1.Visible = false;
+                        labelPos2.Visible = false;
+                        labelRes.Visible = false;
+                        labelMines2.Visible = false;
+                        labelBots.Visible = false;
+                        labelKills.Visible = false;
+                        picPlayer.SizeMode = PictureBoxSizeMode.StretchImage;
+                        picPlayer2.SizeMode = PictureBoxSizeMode.StretchImage;
+                        sprintBar.Value = 0;
+                    }
+                }
             }
             foreach (PictureBox bot in itemsTotal.ToList()) //Mines
             {
@@ -528,7 +628,7 @@ namespace Nextbots2D
                         this.Controls.Remove(bot);
                         this.Controls.Remove(mine);
                         labelBots.Text = "Bots: " + (botCount -= 1).ToString();
-                        labelScore.Text = "SCORE: " + (score += 20).ToString();
+                        labelScore.Text = "SCORE: " + (score += 1).ToString();
                         labelKills.Text = "Kills: " + (kills += 1).ToString();
                     }
                 }
@@ -559,7 +659,7 @@ namespace Nextbots2D
                     sprintBar.Value = 0;
                     labelStatScore.Text = "Score: " + score.ToString();
                     labelStatsKills.Text = "Kills: " + kills.ToString();
-                    labelStatsTime.Text = "Time: " + labelTimer.Text;
+                    labelStatsTime.Text = "Time: " + time + "s";
                     labelStatsDifficulty.Text = difficulty;
                     if (difficulty == "Gamer") labelStatsDifficulty.ForeColor = Color.FromArgb(255, 128, 128);
                     if (difficulty == "Normal") labelStatsDifficulty.ForeColor = Color.FromArgb(255, 192, 128);
