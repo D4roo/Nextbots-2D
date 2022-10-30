@@ -711,9 +711,9 @@
             this.lbLeaderboard.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lbLeaderboard.FormattingEnabled = true;
             this.lbLeaderboard.ItemHeight = 15;
-            this.lbLeaderboard.Location = new System.Drawing.Point(556, 80);
+            this.lbLeaderboard.Location = new System.Drawing.Point(194, 80);
             this.lbLeaderboard.Name = "lbLeaderboard";
-            this.lbLeaderboard.Size = new System.Drawing.Size(236, 302);
+            this.lbLeaderboard.Size = new System.Drawing.Size(598, 302);
             this.lbLeaderboard.TabIndex = 0;
             this.lbLeaderboard.Visible = false;
             // 

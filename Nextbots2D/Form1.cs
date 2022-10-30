@@ -324,7 +324,8 @@ namespace Nextbots2D
         private void cmdLeaderboard_Click(object sender, EventArgs e)
         {
             //View Leaderboard
-            if (lbLeaderboard.Visible == false) { lbLeaderboard.Visible = true; } else { lbLeaderboard.Visible = false; }
+            lbLeaderboard.Items.Clear();
+            if (lbLeaderboard.Visible == false) { lbLeaderboard.Visible = true; } else { lbLeaderboard.Visible = false; return; }
             MongoClient dbClient = new MongoClient("mongodb+srv://dara:wIfXFsNb9lHg7O9F@shaydacluster.svpy6.mongodb.net/ShaydaCluster?retryWrites=true&w=majority");
 
             var database = dbClient.GetDatabase("Nextbots2DCluster");
@@ -333,7 +334,12 @@ namespace Nextbots2D
 
             foreach (BsonDocument doc in documents)
             {
-                Console.WriteLine(doc.ToString());
+                var dName = doc.GetValue("Name");
+                var dScore = doc.GetValue("Score");
+                var dKills = doc.GetValue("Score");
+                var dTime = doc.GetValue("Time");
+                var dDifficulty = doc.GetValue("Difficulty");
+                lbLeaderboard.Items.Add(dName + " - " + dScore + " - " + dKills + " - " + dTime + " - " + dDifficulty);
             }
 
         }
