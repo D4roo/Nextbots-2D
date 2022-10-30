@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Dara\\Repositories\\Nextbots2D\\Nextbots2D\\Nextbots2D.csproj": {}
+    "D:\\Dara\\Repositories\\Nextbots-2D\\Nextbots2D\\Nextbots2D.csproj": {}
   },
   "projects": {
-    "D:\\Dara\\Repositories\\Nextbots2D\\Nextbots2D\\Nextbots2D.csproj": {
+    "D:\\Dara\\Repositories\\Nextbots-2D\\Nextbots2D\\Nextbots2D.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Dara\\Repositories\\Nextbots2D\\Nextbots2D\\Nextbots2D.csproj",
+        "projectUniqueName": "D:\\Dara\\Repositories\\Nextbots-2D\\Nextbots2D\\Nextbots2D.csproj",
         "projectName": "Nextbots2D",
-        "projectPath": "D:\\Dara\\Repositories\\Nextbots2D\\Nextbots2D\\Nextbots2D.csproj",
+        "projectPath": "D:\\Dara\\Repositories\\Nextbots-2D\\Nextbots2D\\Nextbots2D.csproj",
         "packagesPath": "C:\\Users\\DaraM\\.nuget\\packages\\",
-        "outputPath": "D:\\Dara\\Repositories\\Nextbots2D\\Nextbots2D\\obj\\",
+        "outputPath": "D:\\Dara\\Repositories\\Nextbots-2D\\Nextbots2D\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "D:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -43,6 +43,12 @@
       "frameworks": {
         "net6.0-windows7.0": {
           "targetAlias": "net6.0-windows",
+          "dependencies": {
+            "MongoDB.Driver": {
+              "target": "Package",
+              "version": "[2.18.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

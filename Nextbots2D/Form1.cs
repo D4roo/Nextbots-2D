@@ -1,4 +1,6 @@
 using System.Timers;
+using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace Nextbots2D
 {
@@ -23,6 +25,7 @@ namespace Nextbots2D
         public int mines = 20;
         public int score = 0;
         public int kills = 0;
+        public string difficulty = "Normal";
         System.Timers.Timer t = new System.Timers.Timer();// t;
         List<PictureBox> items = new List<PictureBox>();
         List<PictureBox> items2 = new List<PictureBox>();
@@ -148,6 +151,9 @@ namespace Nextbots2D
             sprintBar.Value = 100;
             sprintSpeed = speed + 5;
             originalSpeed = speed;
+            txtName.Text = "";
+            cmdSaveScore.Enabled = true; cmdSaveScore.Text = "Save To Leaderboard"; cmdSaveScore.BackColor = Color.FromArgb(192, 255, 192);
+            if (cbPlayerSpeed.Checked || cbBotSpeed.Checked || cbCustomBotCount.Checked) { cmdSaveScore.Enabled = false; cmdSaveScore.Text = "Cannot Save Custom Game"; cmdSaveScore.BackColor = Color.FromArgb(255, 128, 128); }
             timerExe.Enabled = true; //Starts Game Movements
             t.Start(); //Starts Game Timer + Events
         }
@@ -270,6 +276,67 @@ namespace Nextbots2D
                 cb2Player.ForeColor = Color.White;
             }
         }
+        //Difficulty Levels
+        private void cmdHard_Click(object sender, EventArgs e) //Hard
+        {
+            txtPlayerSpeed.Text = "8";
+            txtBotSpeed.Text = "5";
+            difficulty = "Gamer";
+        }
+        private void cmdNormal_Click(object sender, EventArgs e)
+        {
+            txtPlayerSpeed.Text = "5";
+            txtBotSpeed.Text = "2";
+            difficulty = "Normal";
+        }
+        private void cmdEasy_Click(object sender, EventArgs e)
+        {
+            txtPlayerSpeed.Text = "2";
+            txtBotSpeed.Text = "1";
+            difficulty = "Cake";
+        }
+        private void cmdCancelScore_Click(object sender, EventArgs e)
+        {
+            gbStats.Visible = false;
+            gbControl.Visible = true;
+        }
+        private void cmdSaveScore_Click(object sender, EventArgs e)
+        {
+            if (txtName.Text == "") { txtName.BackColor = Color.FromArgb(255, 128, 128); return; }
+            cmdSaveScore.Enabled = false;
+
+            //Save score to leaderboard using MongoDB
+            MongoClient dbClient = new MongoClient("mongodb+srv://dara:wIfXFsNb9lHg7O9F@shaydacluster.svpy6.mongodb.net/ShaydaCluster?retryWrites=true&w=majority");
+
+            var database = dbClient.GetDatabase("Nextbots2DCluster");
+            var collection = database.GetCollection<BsonDocument>("Leaderboard");
+            var document = new BsonDocument {
+            { "Name", txtName.Text },
+            { "Score", score },
+            { "Kills", kills },
+            { "Time", labelTimer.Text },
+            { "Difficulty", difficulty },
+            };
+            collection.InsertOne(document);
+            gbStats.Visible = false;
+            gbControl.Visible = true;
+        }
+        private void cmdLeaderboard_Click(object sender, EventArgs e)
+        {
+            //View Leaderboard
+            if (lbLeaderboard.Visible == false) { lbLeaderboard.Visible = true; } else { lbLeaderboard.Visible = false; }
+            MongoClient dbClient = new MongoClient("mongodb+srv://dara:wIfXFsNb9lHg7O9F@shaydacluster.svpy6.mongodb.net/ShaydaCluster?retryWrites=true&w=majority");
+
+            var database = dbClient.GetDatabase("Nextbots2DCluster");
+            var collection = database.GetCollection<BsonDocument>("Leaderboard");
+            var documents = collection.Find(new BsonDocument()).ToList();
+
+            foreach (BsonDocument doc in documents)
+            {
+                Console.WriteLine(doc.ToString());
+            }
+
+        }
         private void txtPlayerSpeed_TextChanged(object sender, EventArgs e)
         {
             if (!txtPlayerSpeed.Text.All(char.IsDigit) || txtPlayerSpeed.Text == "")
@@ -285,6 +352,13 @@ namespace Nextbots2D
                 txtBotSpeed.BackColor = Color.FromArgb(255, 128, 128);
             }
             else txtBotSpeed.BackColor = Color.Silver;
+        }
+        private void txtName_TextChanged(object sender, EventArgs e)
+        {
+            if (txtName.BackColor == Color.FromArgb(255, 128, 128)) txtName.BackColor = Color.FromName("Control");
+            int charLimit = txtName.TextLength;
+            labelTxtIndacator.Text = (charLimit).ToString() + "/" + (30).ToString();
+            if (charLimit == 30) { labelTxtIndacator.ForeColor = Color.Red; } else if (charLimit < 30) { labelTxtIndacator.ForeColor = Color.Cyan; }
         }
         private void Form_MouseDown(object? sender, MouseEventArgs e)
         {
@@ -470,7 +544,6 @@ namespace Nextbots2D
                 {
                     timerExe.Enabled = false; //GameOver
                     t.Stop();
-                    gbControl.Visible = true;
                     labelPos1.Visible = false;
                     labelPos2.Visible = false;
                     labelRes.Visible = false;
@@ -478,6 +551,14 @@ namespace Nextbots2D
                     labelBots.Visible = false;
                     labelKills.Visible = false;
                     sprintBar.Value = 0;
+                    labelStatScore.Text = "Score: " + score.ToString();
+                    labelStatsKills.Text = "Kills: " + kills.ToString();
+                    labelStatsTime.Text = "Time: " + labelTimer.Text;
+                    labelStatsDifficulty.Text = difficulty;
+                    if (difficulty == "Gamer") labelStatsDifficulty.ForeColor = Color.FromArgb(255, 128, 128);
+                    if (difficulty == "Normal") labelStatsDifficulty.ForeColor = Color.FromArgb(255, 192, 128);
+                    if (difficulty == "Cake") labelStatsDifficulty.ForeColor = Color.FromArgb(128, 255, 128);
+                    gbStats.Visible = true;
                 }
             }
         }
